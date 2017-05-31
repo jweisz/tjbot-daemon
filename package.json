@@ -1,0 +1,25 @@
+{
+  "name": "tjbot-daemon",
+  "description": "Background daemon that listens on Bluetooth for TJBot requests",
+  "version": "1.0.0",
+  "author": "Justin Weisz <jweisz@us.ibm.com>",
+  "keywords": [
+    "TJBot"
+  ],
+  "license": "Apache-2.0",
+  "main": "tjbot-daemon.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.ibm.com:ETX/tjbot-daemon.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bleno": "^0.4.2",
+    "tjbot": "latest",
+    "winston": "^2.3.1",
+    "mkdirp": "latest",
+    "http-server": "latest"
+  }
+}
