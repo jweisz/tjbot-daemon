@@ -26,11 +26,38 @@ util.inherits(CommandCharacteristic, BlenoCharacteristic);
 CommandCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
     winston.silly("Received command data", data, offset);
 
+    // do a buffered read
+    if (this._readBuffer == undefined) {
+        this._readBuffer = ""
+    }
+
+    // append to the buffer
+    this._readBuffer = this._readBuffer.concat(data);
+
+    // see if we have a complete packet
+    var nullIndex = this._readBuffer.indexOf('\0');
+    if (nullIndex >= 0) {
+        // peel off the packet
+        var packet = this._readBuffer.substring(0, nullIndex);
+        winston.silly("Received full command packet: ", packet);
+
+        // remove it from the buffer
+        this._readBuffer = this._readBuffer.substring(nullIndex + 1);
+
+        // and process it
+        this.processPacket(packet, callback);
+    } else {
+        // send an ACK to get the next packet
+        callback(this.RESULT_SUCCESS);
+    }
+}
+
+CommandCharacteristic.prototype.processPacket = function(packet, callback) {
     var command = {};
     try {
-        command = JSON.parse(data.toString());
+        command = JSON.parse(packet.toString());
     } catch (err) {
-        winston.error("could not decode JSON from data: ", data.toString());
+        winston.error("could not decode JSON from packet: ", packet.toString());
     }
 
     winston.verbose("Received command", command);
@@ -101,7 +128,7 @@ CommandCharacteristic.prototype.onWriteRequest = function(data, offset, withoutR
                 } else if (duration > 3.0) {
                     duration = 3.0;
                 }
-                
+
                 try {
                     this.tjbot.pulse(color, duration);
                 } catch (err) {

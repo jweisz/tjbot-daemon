@@ -50,11 +50,38 @@ util.inherits(RequestCharacteristic, BlenoCharacteristic);
 RequestCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
     winston.silly("Received request data", data, offset);
 
+    // do a buffered read
+    if (this._readBuffer == undefined) {
+        this._readBuffer = ""
+    }
+
+    // append to the buffer
+    this._readBuffer = this._readBuffer.concat(data);
+
+    // see if we have a complete packet
+    var nullIndex = this._readBuffer.indexOf('\0');
+    if (nullIndex >= 0) {
+        // peel off the packet
+        var packet = this._readBuffer.substring(0, nullIndex);
+        winston.silly("Received full request packet: ", packet);
+
+        // remove it from the buffer
+        this._readBuffer = this._readBuffer.substring(nullIndex + 1);
+
+        // and process it
+        this.processPacket(packet, callback);
+    } else {
+        // send an ACK to get the next packet
+        callback(this.RESULT_SUCCESS);
+    }
+}
+
+RequestCharacteristic.prototype.processPacket = function(packet, callback) {
     var request = {};
     try {
-        request = JSON.parse(data.toString());
+        request = JSON.parse(packet.toString());
     } catch (err) {
-        winston.error("could not decode JSON from data: ", data.toString());
+        winston.error("could not decode JSON from packet: ", packet.toString());
     }
 
     winston.verbose("Received request", request);
