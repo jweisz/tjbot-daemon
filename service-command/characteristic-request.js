@@ -61,7 +61,7 @@ RequestCharacteristic.prototype.onWriteRequest = function(data, offset, withoutR
 
     if (!request.hasOwnProperty('cmd')) {
         var err = new Error("Expected 'cmd' in request");
-        this.writeResponseObject(err);
+        this.commandService.writeResponseObject(err);
         callback(this.RESULT_UNLIKELY_ERROR);
         return;
     }
