@@ -32,7 +32,7 @@ fi
 
 if [ ! -d $DAEMON_DIR ]; then
     echo "Cloning tjbot-daemon project to $DAEMON_DIR"
-    git clone git@github.com:jweisz/tjbot-daemon.git $DAEMON_DIR
+    git clone https://github.com/jweisz/tjbot-daemon.git $DAEMON_DIR
 else
     echo "tjbot-daemon project already exists in $DAEMON_DIR, leaving it alone"
 fi
