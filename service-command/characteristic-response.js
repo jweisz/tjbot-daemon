@@ -58,7 +58,7 @@ ResponseCharacteristic.prototype.writeResponseObject = function(obj) {
 
     winston.verbose("Writing response object to ResponseCharacteristic: ", obj);
     if (this.updateValueCallback != undefined) {
-        utils.chunkedWrite(this.updateValueCallback, data, this.maxValueSize);
+        util.chunkedWrite(this.updateValueCallback, data, this.maxValueSize);
     } else {
         winston.error("Unable to write response object, device did not subscribe to ResponseCharacteristic");
     }
