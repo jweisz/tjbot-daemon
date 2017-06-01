@@ -21,6 +21,8 @@ const bleno = require('bleno');
 const BlenoCharacteristic = bleno.Characteristic;
 const BlenoDescriptor = bleno.Descriptor;
 
+const utilities = require('../utilities');
+
 function ResponseCharacteristic(tjbot) {
     ResponseCharacteristic.super_.call(this, {
         uuid: '799d5f0d-0002-0003-a6a2-da053e2a640a',
@@ -58,7 +60,7 @@ ResponseCharacteristic.prototype.writeResponseObject = function(obj) {
 
     winston.verbose("Writing response object to ResponseCharacteristic: ", obj);
     if (this.updateValueCallback != undefined) {
-        util.chunkedWrite(this.updateValueCallback, data, this.maxValueSize);
+        utilities.chunkedWrite(this.updateValueCallback, data, this.maxValueSize);
     } else {
         winston.error("Unable to write response object, device did not subscribe to ResponseCharacteristic");
     }
