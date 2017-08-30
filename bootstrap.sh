@@ -9,16 +9,17 @@ echo "-----------------------------------------------------------------------"
 #----confirm bootstrap
 read -p "Would you like to install tjbot-daemon? [Y/n] " choice </dev/tty
 case "$choice" in
- "n" | "N")
-    echo "OK, tjbot-daemon will not be installed at this time."
-    exit
-    ;;
- *) ;;
+    "n" | "N")
+        echo "OK, tjbot-daemon will not be installed at this time."
+        exit
+        ;;
+    *) ;;
 esac
 
 #----installing additional software packages
 echo ""
 echo "Installing additional software packages (bluetooth, bluez, libbluetooth-dev, libudev-dev)"
+echo "Please enter your root password if prompted."
 sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev
 
 #----clone tjbot
@@ -52,26 +53,41 @@ if [ ! -f $DAEMON_DIR/config.js ]; then
 
     prefix=''
     hardware=''
-    if [ "$camera" == 'y' ] || [ "$camera" == "Y" ]; then
-        hardware="$hardware$prefix'camera'"
-        prefix=', '
-    fi
-    if [ "$led" == 'y' ] || [ "$led" == "Y" ]; then
-        hardware="$hardware$prefix'led'"
-        prefix=', '
-    fi
-    if [ "$mic" == 'y' ] || [ "$mic" == "Y" ]; then
-        hardware="$hardware$prefix'microphone'"
-        prefix=', '
-    fi
-    if [ "$servo" == 'y' ] || [ "$servo" == "Y" ]; then
-        hardware="$hardware$prefix'servo'"
-        prefix=', '
-    fi
-    if [ "$speaker" == 'y' ] || [ "$speaker" == "Y" ]; then
-        hardware="$hardware$prefix'speaker'"
-        prefix=', '
-    fi
+    case "$camera" in
+        "y" | "Y")
+            hardware="$hardware$prefix'camera'"
+            prefix=', '
+            ;;
+        *) ;;
+    esac
+    case "$led" in
+        "y" | "Y")
+            hardware="$hardware$prefix'led'"
+            prefix=', '
+            ;;
+        *) ;;
+    esac
+    case "$mic" in
+        "y" | "Y")
+            hardware="$hardware$prefix'mic'"
+            prefix=', '
+            ;;
+        *) ;;
+    esac
+    case "$servo" in
+        "y" | "Y")
+            hardware="$hardware$prefix'servo'"
+            prefix=', '
+            ;;
+        *) ;;
+    esac
+    case "$speaker" in
+        "y" | "Y")
+            hardware="$hardware$prefix'speaker'"
+            prefix=', '
+            ;;
+        *) ;;
+    esac
 
     sed -i "s/exports.hardware = \[\];/exports.hardware = \[$hardware\];/" $DAEMON_DIR/config.js
 else
