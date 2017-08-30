@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #----intro message
 echo ""
@@ -7,10 +7,9 @@ echo "Welcome! Let's set up your Raspberry Pi with the tjbot-daemon software."
 echo "-----------------------------------------------------------------------"
 
 #----confirm bootstrap
-read -p "Would you like to install tjbot-daemon? Y/n: " choice
-shopt -s nocasematch
+read -p "Would you like to install tjbot-daemon? [Y/n] " choice </dev/tty
 case "$choice" in
- "n" )
+ "n" | "N")
     echo "OK, tjbot-daemon will not be installed at this time."
     exit
     ;;
@@ -25,8 +24,8 @@ sudo apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev
 #----clone tjbot
 echo ""
 echo "We are ready to clone the tjbot-daemon project."
-read -p "Where should we clone it to? (default: /home/pi/Desktop/tjbot-daemon): " DAEMON_DIR
-if [ -z "${DAEMON_DIR// }" ]; then
+read -p "Where should we clone it to? (default: /home/pi/Desktop/tjbot-daemon): " DAEMON_DIR </dev/tty
+if [ -z $DAEMON_DIR ]; then
     DAEMON_DIR='/home/pi/Desktop/tjbot-daemon'
 fi
 
@@ -45,11 +44,11 @@ if [ ! -f $DAEMON_DIR/config.js ]; then
     cp $DAEMON_DIR/config.default.js $DAEMON_DIR/config.js
 
     echo ""
-    read -p "Does your TJBot have a camera installed? (y/N): " camera
-    read -p "Does your TJBot have an LED installed? (y/N): " led
-    read -p "Does your TJBot have a microphone installed? (y/N): " mic
-    read -p "Does your TJBot have a servo installed? (y/N): " servo
-    read -p "Does your TJBot have a speaker installed? (y/N): " speaker
+    read -p "Does your TJBot have a camera installed? (y/N): " camera </dev/tty
+    read -p "Does your TJBot have an LED installed? (y/N): " led </dev/tty
+    read -p "Does your TJBot have a microphone installed? (y/N): " mic </dev/tty
+    read -p "Does your TJBot have a servo installed? (y/N): " servo </dev/tty
+    read -p "Does your TJBot have a speaker installed? (y/N): " speaker </dev/tty
 
     prefix=''
     hardware=''
