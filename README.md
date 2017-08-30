@@ -9,7 +9,7 @@ This project is used to enable TJBot to listen for commands via Bluetooth Low En
 You can install this daemon directly to your TJBot by running the following command:
 
 ```
-curl -sL https://ibm.biz/tjbot-daemon | bash -
+curl -sL https://ibm.biz/tjbot-daemon | sh -
 ```
 
 This script will install additional software packages needed for the daemon, clone the `tjbot-daemon` project to your TJBot, generate a skeleton configuration file, and ask whether you want to launch the daemon whenever your TJBot starts up.
