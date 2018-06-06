@@ -69,7 +69,7 @@ if [ ! -f $DAEMON_DIR/config.js ]; then
     esac
     case "$mic" in
         "y" | "Y")
-            hardware="$hardware$prefix'mic'"
+            hardware="$hardware$prefix'microphone'"
             prefix=', '
             ;;
         *) ;;
