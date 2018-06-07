@@ -111,7 +111,7 @@ echo ""
 echo "2. Log in to Bluemix and create an instance of the Watson services you plan
 to use. The Watson services are listed on the Bluemix dashboard, under
 \"Catalog\". The full list of Watson services used by tjbot-daemon are:"
-echo "Conversation, Language Translator, Speech to Text, Text to Speech,"
+echo "Assistant, Language Translator, Speech to Text, Text to Speech,"
 echo "Tone Analyzer, and Visual Recognition."
 echo ""
 echo "3. For each Watson service, click the \"Create\" button on the bottom right

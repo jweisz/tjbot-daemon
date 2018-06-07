@@ -76,7 +76,9 @@ bleno.on('disconnect', function(clientAddress) {
     winston.verbose("Disconnected from address: " + clientAddress);
 
     // stop listening in case tjbot is listening
-    tj.stopListening();
+    // (and bypass the capability assert() in case this
+    // tjbot doens't have a mic)
+    tj._stopListening();
 
     // play a sound signifying a client disconnected
     try {
