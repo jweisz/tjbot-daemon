@@ -1,7 +1,7 @@
 {
   "name": "tjbot-daemon",
   "description": "Background daemon that listens on Bluetooth for TJBot requests",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Justin Weisz <jweisz@us.ibm.com>",
   "keywords": [
     "TJBot"
