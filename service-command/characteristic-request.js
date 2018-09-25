@@ -204,8 +204,18 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
             }
             break;
         case "speak":
-            if (args['message'] != undefined) {
+            if (args['message'] != undefined && args['voice'] != undefined && args['language'] != undefined) {
                 var message = args['message'];
+                var voice = args['voice'];
+                var language = args['language'];
+
+                winston.debug("Message:", message);
+                winston.debug("Voice:", voice);
+                winston.debug("Language:", language);
+
+                self.tjbot.configuration.speak.language = language;
+                self.tjbot.configuration.speak.voice = voice;
+
                 try {
                     self.tjbot.speak(message).then(function() {
                         self.commandService.writeResponseObject({ message: message });

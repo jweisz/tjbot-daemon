@@ -39,3 +39,7 @@ jspm_packages
 # User-specific config
 config.js
 
+# Idea project config
+.idea
+*.iml
+
