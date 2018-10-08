@@ -21,8 +21,7 @@ exports.credentials.assistant = {
 // Watson Language Translator
 // https://www.ibm.com/watson/services/language-translator/
 exports.credentials.language_translator = {
-	password: '',
-	username: ''
+	apikey: ''
 };
 
 // Watson Speech to Text
@@ -49,5 +48,5 @@ exports.credentials.tone_analyzer = {
 // Watson Visual Recognition
 // https://www.ibm.com/watson/services/visual-recognition/
 exports.credentials.visual_recognition = {
-    api_key: ''
+    apikey: ''
 };
