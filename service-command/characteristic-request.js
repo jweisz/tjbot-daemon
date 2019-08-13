@@ -165,6 +165,28 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
                 console.log( `child process exited with code ${code}` );
             });
             break;
+
+        case "get_ip":
+
+            const hostname_ip = spawn( 'hostname', ['-I'] );
+            hostname_ip.stdout.on( 'data', data => {
+                try {
+                    self.commandService.writeResponseObject(data.toString().split(' ', 1));
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            });
+            hostname_ip.stderr.on( 'data', data => {
+                console.log( `stderr: ${data}` );
+            });
+
+            hostname_ip.on( 'close', code => {
+                console.log( `child process exited with code ${code}` );
+            });
+
+            break;
+        
         case "scan_results":
             const wpa_cli_scan_results = spawn( 'wpa_cli', ['scan_results'] );
 
@@ -220,11 +242,11 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
                     winston.error("TJBot threw an error:", err);
                     error = err;
                 }
-		break;
+        break;
             } else {
                 error = new Error("Expected 'text' in args");
             }
-	    break;
+        break;
          case "reboot_tjbot":
             const reboot_tjbot = spawn( 'shutdown', ['-r', 'now'] );
             console.log('Rebooting Tjbot...');
@@ -327,7 +349,15 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
             }
             break;
         case "see":
+            if (args['language'] != undefined) {
+                var language = args['language'];
+                winston.debug("Accept-Language:", language);
+            } else {
+                var language = 'en';
+                error = new Error("Expected 'language' in args, using 'en'");
+            }
             var filePath = self.photoDir + 'photo.jpg';
+            self.tjbot.configuration.see.language = language;
             try {
                 self.tjbot.takePhoto(filePath).then(function(buffer) {
                     winston.debug("sending image to Watson Visual Recognition");
