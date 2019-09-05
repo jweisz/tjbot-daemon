@@ -13,7 +13,8 @@
     "url": "git@github.ibm.com:ETX/tjbot-daemon.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sudo node tjbot-daemon.js"
   },
   "dependencies": {
     "bleno": "^0.4.2",

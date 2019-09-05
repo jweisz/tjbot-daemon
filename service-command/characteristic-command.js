@@ -167,6 +167,9 @@ CommandCharacteristic.prototype.processPacket = function(packet, callback) {
         case "wave":
             this.tjbot.wave();
             break;
+        case "wifi_list":
+		    console.log('WiFi SSID List detected by TJBot');
+            break;
         default:
             callback(this.RESULT_UNLIKELY_ERROR);
             return;

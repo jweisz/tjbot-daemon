@@ -204,11 +204,28 @@ The full list of Commands and Requests is given below.
 | read | Request | _none_ |
 | shineColors | Request | _none_ |
 | randomColor | Request | _none_ |
-| speak | Request | _none_ |
+| speak | Request | `{"message":"<text>","voice":"<voice>","language":"<language>"}`  |
 | play | Request | _none_ |
 | translate | Request | _none_ |
 | identifyLanguage | Request | `{"text":"<text>"}` |
 | isTranslatable | Request | `{"sourceLanguage":"<language>","targetLanguage":"<language">}` |
+
+#### GARRAX List of Commands and Requests
+
+The full list of Commands is given below.
+
+| **Name** | **Type** | **Arguments** |
+|---|---|---|
+| scan | Request | _none_ |
+| scan_results | Request | _none_ |
+| wpa_config | Request | `{"ssid": <ssid>, "psk": <psk>, "id_str": <id_str>}}` |
+| reboot_tjbot | Request | _none_ |
+| shutdown_tjbot | Request | _none_ |
+
+### Speak Characteristic ###
+
+The Speak Characteristic is used to send text to the `tj.speak()` function. It's important to pass the message, the voice and the language, according with the
+supported voices and languages supported by the API.
 
 ### Listen Characteristic
 

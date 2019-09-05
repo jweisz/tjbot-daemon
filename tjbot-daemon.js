@@ -21,6 +21,10 @@ const winston = require('winston');
 const TJBot = require('tjbot');
 const config = require('./config');
 
+TJBot.prototype._SERVO_ARM_BACK = 800;
+TJBot.prototype._SERVO_ARM_UP = 1400;
+TJBot.prototype._SERVO_ARM_DOWN = 2300;
+
 const ConfigurationService = require('./service-configuration/service-configuration');
 const CommandService = require('./service-command/service-command');
 

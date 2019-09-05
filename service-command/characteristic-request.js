@@ -121,7 +121,202 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
     // capture whether an error occurs in invoking a tjbot method
     var error = undefined;
 
+    let num_lines = 1;
+    let char_code = 0;
+    let character = '';
+    let lines = [];
+    let ssids = [];
+
+    const { spawn } = require('child_process');
+
     switch (request['cmd']) {
+        case "scan":
+            const wpa_cli_scan = spawn( 'wpa_cli', ['scan'] );
+
+            wpa_cli_scan.stdout.on( 'data', data => {
+                ssids = [];
+                let scan_results = JSON.stringify(data);
+                let json_object = JSON.parse(scan_results);
+                let line = '';
+                for (let i=0; i < json_object['data'].length; i++) {
+                    char_code = json_object['data'][i];
+                    character = String.fromCharCode(char_code);
+                    if (char_code === 10) {
+                        lines.push(line);
+                        num_lines++;
+                        line = '';
+                    } else {
+                        line += character;
+                    }
+                }
+                try {
+                    self.commandService.writeResponseObject(lines);
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            });
+
+            wpa_cli_scan.stderr.on( 'data', data => {
+                console.log( `stderr: ${data}` );
+            });
+
+            wpa_cli_scan.on( 'close', code => {
+                console.log( `child process exited with code ${code}` );
+            });
+            break;
+
+        case "get_ip":
+
+            const hostname_ip = spawn( 'hostname', ['-I'] );
+            hostname_ip.stdout.on( 'data', data => {
+                try {
+                    self.commandService.writeResponseObject(data.toString().split(' ', 1));
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            });
+            hostname_ip.stderr.on( 'data', data => {
+                console.log( `stderr: ${data}` );
+            });
+
+            hostname_ip.on( 'close', code => {
+                console.log( `child process exited with code ${code}` );
+            });
+
+            break;
+        
+        case "scan_results":
+            const wpa_cli_scan_results = spawn( 'wpa_cli', ['scan_results'] );
+
+            wpa_cli_scan_results.stdout.on( 'data', data => {
+                ssids = [];
+                let scan_results = JSON.stringify(data);
+                let json_object = JSON.parse(scan_results);
+                let line = '';
+                for (let i=0; i < json_object['data'].length; i++) {
+                    char_code = json_object['data'][i];
+                    character = String.fromCharCode(char_code);
+                    if (char_code === 10) {
+                        lines.push(line);
+                        let fields = '';
+                        fields = line.split('\t');
+                        if (num_lines > 2) {
+                            ssids.push(fields[4]);
+                        }
+                        num_lines++;
+                        line = '';
+                    } else {
+                        line += character;
+                    }
+                }
+                try {
+                    self.commandService.writeResponseObject(ssids);
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            });
+
+            wpa_cli_scan_results.stderr.on( 'data', data => {
+                console.log( `stderr: ${data}` );
+            });
+
+            wpa_cli_scan_results.on( 'close', code => {
+                console.log( `child process exited with code ${code}` );
+            });
+            break;
+        case "wpa_config":
+            if (args['ssid'] != undefined && args['psk'] != undefined && args['id_str'] != undefined) {
+                var ssid = args['ssid'];
+                var psk = args['psk'];
+                var id_str = args['id_str'];
+                var wpa_config = require('child_process').exec;
+                wpa_config('/bin/sh /home/pi/tjbot-daemon/wpa_config.sh "' + ssid + '" "' + psk + '" "' + id_str + '"', function callback(error, stdout, stderr) {
+                    console.log(stdout);
+                });
+                try {
+                    self.commandService.writeResponseObject(ssids);
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+        break;
+            } else {
+                error = new Error("Expected 'text' in args");
+            }
+        break;
+         case "reboot_tjbot":
+            const reboot_tjbot = spawn( 'shutdown', ['-r', 'now'] );
+            console.log('Rebooting Tjbot...');
+            reboot_tjbot.stdout.on( 'data', data => {
+                ssids = [];
+                let scan_results = JSON.stringify(data);
+                let json_object = JSON.parse(scan_results);
+                let line = '';
+                for (let i=0; i < json_object['data'].length; i++) {
+                    char_code = json_object['data'][i];
+                    character = String.fromCharCode(char_code);
+                    if (char_code === 10) {
+                        lines.push(line);
+                        num_lines++;
+                        line = '';
+                    } else {
+                        line += character;
+                    }
+                }
+                try {
+                    self.commandService.writeResponseObject(lines);
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            });
+
+            wpa_cli_scan.stderr.on( 'data', data => {
+                console.log( `stderr: ${data}` );
+            });
+
+            wpa_cli_scan.on( 'close', code => {
+                console.log( `child process exited with code ${code}` );
+            });
+
+         case "shutdown_tjbot":
+            const shutdown_tjbot = spawn( 'shutdown', ['-h', 'now'] );
+            console.log('Sutting down Tjbot...');
+            shutdown_tjbot.stdout.on( 'data', data => {
+                ssids = [];
+                let scan_results = JSON.stringify(data);
+                let json_object = JSON.parse(scan_results);
+                let line = '';
+                for (let i=0; i < json_object['data'].length; i++) {
+                    char_code = json_object['data'][i];
+                    character = String.fromCharCode(char_code);
+                    if (char_code === 10) {
+                        lines.push(line);
+                        num_lines++;
+                        line = '';
+                    } else {
+                        line += character;
+                    }
+                }
+                try {
+                    self.commandService.writeResponseObject(lines);
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            });
+
+            wpa_cli_scan.stderr.on( 'data', data => {
+                console.log( `stderr: ${data}` );
+            });
+
+            wpa_cli_scan.on( 'close', code => {
+                console.log( `child process exited with code ${code}` );
+            });
+
         case "analyzeTone":
             if (args['text'] != undefined) {
                 var text = args['text'];
@@ -154,7 +349,15 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
             }
             break;
         case "see":
+            if (args['language'] != undefined) {
+                var language = args['language'];
+                winston.debug("Accept-Language:", language);
+            } else {
+                var language = 'en';
+                error = new Error("Expected 'language' in args, using 'en'");
+            }
             var filePath = self.photoDir + 'photo.jpg';
+            self.tjbot.configuration.see.language = language;
             try {
                 self.tjbot.takePhoto(filePath).then(function(buffer) {
                     winston.debug("sending image to Watson Visual Recognition");
@@ -170,7 +373,7 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
             }
             break;
         case "read":
- 	    var filePath = self.photoDir + 'photo.jpg';
+            var filePath = self.photoDir + 'photo.jpg';
             try {
                 self.tjbot.takePhoto(filePath).then(function(buffer) {
                     winston.debug("sending image to Watson Visual Recognition");
@@ -203,7 +406,7 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
                 error = err;
             }
             break;
-        case "speak":
+        case "speak_new":
             if (args['message'] != undefined) {
                 var message = args['message'];
                 try {
@@ -216,6 +419,31 @@ RequestCharacteristic.prototype.processPacket = function(packet, callback) {
                 }
             } else {
                 error = new Error("Expected 'message' in args");
+            }
+            break;
+        case "speak":
+            if (args['message'] != undefined && args['voice'] != undefined && args['language'] != undefined) {
+                var message = args['message'];
+                var voice = args['voice'];
+                var language = args['language'];
+
+                winston.debug("Message:", message);
+                winston.debug("Voice:", voice);
+                winston.debug("Language:", language);
+
+                self.tjbot.configuration.speak.language = language;
+                self.tjbot.configuration.speak.voice = voice;
+
+                try {
+                    self.tjbot.speak(message).then(function() {
+                        self.commandService.writeResponseObject({ message: message });
+                    });
+                } catch (err) {
+                    winston.error("TJBot threw an error:", err);
+                    error = err;
+                }
+            } else {
+                error = new Error("Expected 'message', 'voice' and 'language' in args");
             }
             break;
         case "play":
