@@ -16,8 +16,8 @@
 
 const util = require('util');
 const winston = require('winston');
-
 const bleno = require('bleno');
+
 const BlenoCharacteristic = bleno.Characteristic;
 const BlenoDescriptor = bleno.Descriptor;
 
@@ -25,13 +25,13 @@ function ConfigurationCharacteristic(name) {
     ConfigurationCharacteristic.super_.call(this, {
         uuid: '799d5f0d-0001-0001-a6a2-da053e2a640a',
         properties: ['read'],
-        value: Buffer.from(JSON.stringify({name:name})),
+        value: Buffer.from(JSON.stringify({name})),
         descriptors: [
             new BlenoDescriptor({
                 uuid: '0101',
-                value: 'TJBot Configuration'
-            })
-        ]
+                value: 'TJBot Configuration',
+            }),
+        ],
     });
 }
 

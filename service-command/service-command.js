@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 IBM Corp. All Rights Reserved.
+ * Copyright 2017-2020 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,19 @@
 
 const util = require('util');
 const winston = require('winston');
-
 const bleno = require('bleno');
-const BlenoPrimaryService = bleno.PrimaryService;
 
+const BlenoPrimaryService = bleno.PrimaryService;
 const CommandCharacteristic = require('./characteristic-command');
 const RequestCharacteristic = require('./characteristic-request');
 const ResponseCharacteristic = require('./characteristic-response');
 const ListenCharacteristic = require('./characteristic-listen');
 
 function CommandService(tjbot, name) {
-    var commandCharacteristic = new CommandCharacteristic(tjbot, this);
-    var requestCharacteristic = new RequestCharacteristic(tjbot, this, name);
-    var responseCharacteristic = new ResponseCharacteristic(tjbot, this);
-    var listenCharacteristic = new ListenCharacteristic(tjbot);
+    const commandCharacteristic = new CommandCharacteristic(tjbot, this);
+    const requestCharacteristic = new RequestCharacteristic(tjbot, this, name);
+    const responseCharacteristic = new ResponseCharacteristic(tjbot, this);
+    const listenCharacteristic = new ListenCharacteristic(tjbot);
 
     CommandService.super_.call(this, {
         uuid: '799d5f0d-0002-0000-a6a2-da053e2a640a',
@@ -37,8 +36,8 @@ function CommandService(tjbot, name) {
             commandCharacteristic,
             requestCharacteristic,
             responseCharacteristic,
-            listenCharacteristic
-        ]
+            listenCharacteristic,
+        ],
     });
 
     this.responseCharacteristic = responseCharacteristic;
@@ -46,12 +45,12 @@ function CommandService(tjbot, name) {
 }
 
 // deliver responses to the responseCharacteristic
-CommandService.prototype.writeResponseObject = function(obj) {
+CommandService.prototype.writeResponseObject = function writeResponseObject(obj) {
     this.responseCharacteristic.writeResponseObject(obj);
 }
 
 // deliver text from listen() to the listenCharacteristic
-CommandService.prototype.receivedListenText = function(text) {
+CommandService.prototype.receivedListenText = function receivedListenText(text) {
     this.listenCharacteristic.receivedListenText(text);
 }
 

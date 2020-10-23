@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 IBM Corp. All Rights Reserved.
+ * Copyright 2017-2020 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 const util = require('util');
 const winston = require('winston');
-
 const bleno = require('bleno');
+
 const BlenoCharacteristic = bleno.Characteristic;
 const BlenoDescriptor = bleno.Descriptor;
 
@@ -30,9 +30,9 @@ function ResponseCharacteristic(tjbot) {
         descriptors: [
             new BlenoDescriptor({
                 uuid: '0203',
-                value: 'TJBot Response channel for receiving data from a request'
-            })
-        ]
+                value: 'TJBot Response channel for receiving data from a request',
+            }),
+        ],
     });
 
     this.tjbot = tjbot;
@@ -42,28 +42,28 @@ function ResponseCharacteristic(tjbot) {
 
 util.inherits(ResponseCharacteristic, BlenoCharacteristic);
 
-ResponseCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
-    winston.verbose("Device subscribed to ResponseCharacteristic");
+ResponseCharacteristic.prototype.onSubscribe = function onSubscribe(maxValueSize, updateValueCallback) {
+    winston.verbose('Device subscribed to ResponseCharacteristic');
     this.updateValueCallback = updateValueCallback;
     this.maxValueSize = maxValueSize;
-}
+};
 
-ResponseCharacteristic.prototype.onUnsubscribe = function() {
-    winston.verbose("Device unsubscribed from ResponseCharacteristic");
+ResponseCharacteristic.prototype.onUnsubscribe = function onUnsubscribe() {
+    winston.verbose('Device unsubscribed from ResponseCharacteristic');
     this.updateValueCallback = undefined;
     this.maxValueSize = 0;
-}
+};
 
-ResponseCharacteristic.prototype.writeResponseObject = function(obj) {
-    var objJson = JSON.stringify(obj);
-    var data = Buffer.from(objJson);
+ResponseCharacteristic.prototype.writeResponseObject = function writeResponseObject(obj) {
+    const objJson = JSON.stringify(obj);
+    const data = Buffer.from(objJson);
 
-    winston.verbose("Writing response object to ResponseCharacteristic: ", obj);
-    if (this.updateValueCallback != undefined) {
+    winston.verbose('Writing response object to ResponseCharacteristic: ', obj);
+    if (this.updateValueCallback !== undefined) {
         utilities.chunkedWrite(this.updateValueCallback, data, this.maxValueSize);
     } else {
-        winston.error("Unable to write response object, device did not subscribe to ResponseCharacteristic");
+        winston.error('Unable to write response object, device did not subscribe to ResponseCharacteristic');
     }
-}
+};
 
 module.exports = ResponseCharacteristic;

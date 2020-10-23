@@ -15,8 +15,8 @@
  */
 
 const util = require('util');
-
 const bleno = require('bleno');
+
 const BlenoPrimaryService = bleno.PrimaryService;
 
 const HardwareCharacteristic = require('./characteristic-hardware');
@@ -29,8 +29,8 @@ function ConfigurationService(tjbot, name) {
         characteristics: [
             new HardwareCharacteristic(tjbot),
             new ConfigurationCharacteristic(name),
-            new CapabilityCharacteristic(tjbot)
-        ]
+            new CapabilityCharacteristic(tjbot),
+        ],
     });
 }
 

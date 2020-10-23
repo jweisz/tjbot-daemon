@@ -16,8 +16,8 @@
 
 const util = require('util');
 const winston = require('winston');
-
 const bleno = require('bleno');
+
 const BlenoCharacteristic = bleno.Characteristic;
 const BlenoDescriptor = bleno.Descriptor;
 
@@ -29,9 +29,9 @@ function CapabilityCharacteristic(tjbot) {
         descriptors: [
             new BlenoDescriptor({
                 uuid: '0103',
-                value: 'TJBot Capabilities'
-            })
-        ]
+                value: 'TJBot Capabilities',
+            }),
+        ],
     });
 }
 

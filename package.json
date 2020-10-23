@@ -1,7 +1,7 @@
 {
   "name": "tjbot-daemon",
   "description": "Background daemon that listens on Bluetooth for TJBot requests",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "author": "Justin Weisz <jweisz@us.ibm.com>",
   "keywords": [
     "TJBot"
@@ -16,10 +16,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "bleno": "^0.4.2",
-    "tjbot": "^1.5.0",
-    "winston": "^2.3.1",
+    "bleno": "^0.5.0",
+    "http-server": "latest",
     "mkdirp": "latest",
-    "http-server": "latest"
+    "tjbot": "^2.0.0",
+    "winston": "latest"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
   }
 }
